@@ -1,0 +1,1 @@
+java -jar myJar.jar --mode multi-thread --count 3 --files https://cdn.humoraf.ru/wp-content/uploads/2017/08/23-14.jpg#https://klike.net/uploads/posts/20-03/1551516106_1.jpg#https://klike.net/uploads/posts/2019-03/medium/1551512888_2.jpg --folder /home/nail/Изображения/

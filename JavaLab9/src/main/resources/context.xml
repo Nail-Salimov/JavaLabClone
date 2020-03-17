@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg name="dataSource" ref="hikariDataSource"/>
+    </bean>
+
+    <bean id="hikariDataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <constructor-arg name="configuration" ref="hikariConfig"/>
+    </bean>
+
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <property name="password" value="0205"/>
+        <property name="username" value="postgres"/>
+        <property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/javalab"/>
+    </bean>
+
+
+
+    <bean id="sellerRepository" class="server.repositories.SellerRepositoryImpl">
+        <constructor-arg name="template" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="generalRepository" class="server.repositories.GeneralRepositoryImpl">
+        <constructor-arg name="template" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="clientRepository" class="server.repositories.ClientRepositoryImpl">
+        <constructor-arg name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+
+    <bean id="sellerService" class="server.services.SellerServiceImpl">
+        <constructor-arg name="sellerRepository" ref="sellerRepository"/>
+    </bean>
+
+    <bean id="clientService" class="server.services.ClientServiceImpl">
+        <constructor-arg name="clientRepository" ref="clientRepository"/>
+    </bean>
+
+    <bean id="generalService" class="server.services.GeneralServiceImpl">
+        <constructor-arg name="generalRepository" ref="generalRepository"/>
+    </bean>
+
+
+    <bean id="requestDispatcher" class="server.dispatcher.RequestDispatcher">
+        <constructor-arg name="generalService" ref="generalService"/>
+        <constructor-arg name="clientService" ref="clientService"/>
+        <constructor-arg name="sellerService" ref="sellerService"/>
+    </bean>
+
+    <bean id="server" class="server.protocol.Server">
+        <constructor-arg name="dispatcher" ref="requestDispatcher"/>
+    </bean>
+
+</beans>
